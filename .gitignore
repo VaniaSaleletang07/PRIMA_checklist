@@ -19,10 +19,17 @@ node_modules/
 # Runtime data, uploaded documents, backups, and local databases
 backend/storage/postgres/
 backend/storage/app/private/
-backend/storage/logs/
-backend/storage/framework/cache/
-backend/storage/framework/sessions/
-backend/storage/framework/views/
+# Isi direktori runtime diabaikan, tetapi direktorinya sendiri HARUS tetap ada di
+# git. Tanpa itu clone segar gagal dengan "Please provide a valid cache path"
+# karena Laravel tidak dapat menulis view yang dikompilasi.
+backend/storage/logs/*
+!backend/storage/logs/.gitignore
+backend/storage/framework/cache/*
+!backend/storage/framework/cache/.gitignore
+backend/storage/framework/sessions/*
+!backend/storage/framework/sessions/.gitignore
+backend/storage/framework/views/*
+!backend/storage/framework/views/.gitignore
 *.log
 *.pid
 *.key
@@ -53,3 +60,7 @@ Thumbs.db
 /.htaccess.disabled
 /foto/
 
+
+# Override compose khusus mesin lokal (path bind mount tiap developer berbeda)
+compose.override.yaml
+compose.override.yml
