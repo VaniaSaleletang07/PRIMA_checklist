@@ -1,0 +1,18 @@
+{
+	email {$ACME_EMAIL}
+}
+
+{$PRIMA_DOMAIN} {
+	encode zstd gzip
+
+	# HSTS tidak ditambahkan Caddy secara default.
+	header Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+	# Seluruh header keamanan lain (CSP dkk) sudah dipasang nginx frontend.
+	reverse_proxy frontend:80
+
+	log {
+		output stdout
+		format console
+	}
+}

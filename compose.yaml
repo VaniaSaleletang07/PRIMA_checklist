@@ -19,6 +19,7 @@ services:
     networks: [prima]
 
   backend:
+    image: prima-backend:latest
     build:
       context: ./backend
     restart: unless-stopped
@@ -27,11 +28,11 @@ services:
       APP_ENV: ${APP_ENV:-local}
       APP_KEY: ${APP_KEY:-base64:36KlO0umXdg9dkHPR6/x9DByrHGTmfGwNKbFAhhRprM=}
       APP_DEBUG: ${APP_DEBUG:-true}
-      APP_URL: ${APP_URL:-http://localhost:8080}
+      APP_URL: ${APP_URL:-http://localhost:8091}
       APP_LOCALE: id
       APP_FALLBACK_LOCALE: id
       APP_TIMEZONE: Asia/Makassar
-      FRONTEND_URL: ${APP_URL:-http://localhost:8080}
+      FRONTEND_URL: ${APP_URL:-http://localhost:8091}
       PRIMA_SIGNATURE_SECRET: ${PRIMA_SIGNATURE_SECRET:-local-signature-secret-change-before-production-2026}
       CAPTCHA_ENABLED: ${CAPTCHA_ENABLED:-true}
       TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:-1x00000000000000000000AA}
@@ -56,41 +57,47 @@ services:
       PRIMA_ADMIN_USERNAME: ${PRIMA_ADMIN_USERNAME:-admin}
       PRIMA_ADMIN_PASSWORD: ${PRIMA_ADMIN_PASSWORD:-Admin123!}
       PRIMA_ADMIN_EMAIL: ${PRIMA_ADMIN_EMAIL:-admin@prima.local}
+      PRIMA_RUN_MIGRATIONS: "true"
     volumes:
-      - laravel_storage:/var/www/html/storage
+      - laravel_storage:/app/storage
     depends_on:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-fsS", "http://localhost/up"]
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/up"]
       interval: 10s
       timeout: 5s
       retries: 10
     networks: [prima]
 
   frontend:
+    image: prima-frontend:latest
     build:
       context: ./frontend
       args:
         VITE_API_URL: /api/v1
     restart: unless-stopped
     ports:
-      - "${APP_PORT:-8080}:80"
+      - "127.0.0.1:${APP_PORT:-8091}:80"
     depends_on:
       backend:
         condition: service_healthy
     networks: [prima]
 
   scheduler:
-    build:
-      context: ./backend
+    image: prima-backend:latest
     restart: unless-stopped
+    # Image FrankenPHP membawa HEALTHCHECK ke endpoint admin Caddy (:2019).
+    # Container ini tidak menjalankan server HTTP, jadi warisan itu dimatikan.
+    # Kelangsungan prosesnya sudah dijaga restart: unless-stopped.
+    healthcheck:
+      disable: true
     command: ["php", "artisan", "schedule:work"]
     environment:
       APP_NAME: PRIMA
       APP_ENV: ${APP_ENV:-local}
       APP_KEY: ${APP_KEY:-base64:36KlO0umXdg9dkHPR6/x9DByrHGTmfGwNKbFAhhRprM=}
-      APP_URL: ${APP_URL:-http://localhost:8080}
+      APP_URL: ${APP_URL:-http://localhost:8091}
       APP_TIMEZONE: Asia/Makassar
       DB_CONNECTION: pgsql
       DB_HOST: postgres
@@ -101,7 +108,38 @@ services:
       CACHE_STORE: database
       QUEUE_CONNECTION: database
     volumes:
-      - laravel_storage:/var/www/html/storage
+      - laravel_storage:/app/storage
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks: [prima]
+
+  queue:
+    image: prima-backend:latest
+    restart: unless-stopped
+    # Image FrankenPHP membawa HEALTHCHECK ke endpoint admin Caddy (:2019).
+    # Container ini tidak menjalankan server HTTP, jadi warisan itu dimatikan.
+    # Kelangsungan prosesnya sudah dijaga restart: unless-stopped.
+    healthcheck:
+      disable: true
+    command: ["php", "artisan", "queue:work", "--tries=3", "--max-time=3600", "--sleep=3"]
+    environment:
+      APP_NAME: PRIMA
+      APP_ENV: ${APP_ENV:-local}
+      APP_KEY: ${APP_KEY:-base64:36KlO0umXdg9dkHPR6/x9DByrHGTmfGwNKbFAhhRprM=}
+      APP_URL: ${APP_URL:-http://localhost:8091}
+      APP_TIMEZONE: Asia/Makassar
+      LOG_CHANNEL: stderr
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${POSTGRES_DB:-prima}
+      DB_USERNAME: ${POSTGRES_USER:-prima}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-prima_local_password}
+      CACHE_STORE: database
+      QUEUE_CONNECTION: database
+    volumes:
+      - laravel_storage:/app/storage
     depends_on:
       backend:
         condition: service_healthy

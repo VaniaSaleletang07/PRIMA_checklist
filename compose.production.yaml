@@ -1,12 +1,22 @@
+# Overlay produksi. Di VPS image TIDAK di-build lokal, melainkan ditarik dari
+# GHCR hasil workflow .github/workflows/release.yml:
+#
+#   docker compose -f compose.yaml -f compose.production.yaml pull
+#   docker compose -f compose.yaml -f compose.production.yaml up -d
+#
+# PRIMA_IMAGE_TAG boleh diisi SHA commit untuk menyematkan versi tertentu
+# sekaligus mempermudah rollback.
 services:
   postgres:
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD wajib diisi}
 
   backend:
+    image: ${PRIMA_REGISTRY:-ghcr.io/vaniasaleletang07}/prima-backend:${PRIMA_IMAGE_TAG:-latest}
     environment:
       APP_ENV: production
       APP_DEBUG: "false"
+      SESSION_SECURE_COOKIE: "true"
       APP_KEY: ${APP_KEY:?APP_KEY wajib diisi}
       APP_URL: ${APP_URL:?APP_URL wajib diisi}
       FRONTEND_URL: ${APP_URL:?APP_URL wajib diisi}
@@ -20,6 +30,7 @@ services:
       PRIMA_ADMIN_PASSWORD: ${PRIMA_ADMIN_PASSWORD:?PRIMA_ADMIN_PASSWORD wajib diisi}
 
   scheduler:
+    image: ${PRIMA_REGISTRY:-ghcr.io/vaniasaleletang07}/prima-backend:${PRIMA_IMAGE_TAG:-latest}
     environment:
       APP_ENV: production
       APP_DEBUG: "false"
@@ -27,3 +38,40 @@ services:
       APP_URL: ${APP_URL:?APP_URL wajib diisi}
       PRIMA_SIGNATURE_SECRET: ${PRIMA_SIGNATURE_SECRET:?PRIMA_SIGNATURE_SECRET wajib diisi}
       DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD wajib diisi}
+
+  queue:
+    image: ${PRIMA_REGISTRY:-ghcr.io/vaniasaleletang07}/prima-backend:${PRIMA_IMAGE_TAG:-latest}
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: ${APP_KEY:?APP_KEY wajib diisi}
+      APP_URL: ${APP_URL:?APP_URL wajib diisi}
+      PRIMA_SIGNATURE_SECRET: ${PRIMA_SIGNATURE_SECRET:?PRIMA_SIGNATURE_SECRET wajib diisi}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD wajib diisi}
+
+  # Terminasi TLS + sertifikat Let's Encrypt otomatis.
+  # Port 80 tetap dibuka karena dipakai ACME HTTP challenge dan redirect ke HTTPS.
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      PRIMA_DOMAIN: ${PRIMA_DOMAIN:?PRIMA_DOMAIN wajib diisi}
+      ACME_EMAIL: ${ACME_EMAIL:?ACME_EMAIL wajib diisi}
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - frontend
+    networks: [prima]
+
+  frontend:
+    image: ${PRIMA_REGISTRY:-ghcr.io/vaniasaleletang07}/prima-frontend:${PRIMA_IMAGE_TAG:-latest}
+
+volumes:
+  caddy_data:
+  caddy_config:

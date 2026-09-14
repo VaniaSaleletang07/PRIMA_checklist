@@ -6,6 +6,7 @@ use App\Http\Middleware\SecurityHeaders;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,6 +16,15 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Backend hanya dapat diakses lewat reverse proxy nginx di network Docker
+        // (tidak ada port yang dipublish), sehingga '*' aman di sini. Tanpa ini,
+        // seluruh request terlihat berasal dari IP container nginx sehingga
+        // throttle:login menjadi rate limit global, dan HTTPS tidak terdeteksi.
+        $middleware->trustProxies(at: '*', headers: Request::HEADER_X_FORWARDED_FOR
+            | Request::HEADER_X_FORWARDED_HOST
+            | Request::HEADER_X_FORWARDED_PORT
+            | Request::HEADER_X_FORWARDED_PROTO);
+
         $middleware->append(SecurityHeaders::class);
         $middleware->alias([
             'prima.available' => EnsurePrimaAvailable::class,

@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend (PHP 8.2)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          # phpunit.xml memakai sqlite :memory:, jadi pdo_sqlite wajib ada di runner
+          # meskipun aplikasi produksinya berjalan di PostgreSQL.
+          extensions: pdo_sqlite, sqlite3, intl, zip, pdo_pgsql
+          coverage: none
+
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/composer
+          key: composer-${{ hashFiles('backend/composer.lock') }}
+          restore-keys: composer-
+
+      - name: Install dependencies
+        working-directory: backend
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Prepare environment
+        working-directory: backend
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Run tests
+        working-directory: backend
+        run: php artisan test
+
+  frontend:
+    name: Frontend (Node 22)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build
+        working-directory: frontend
+        run: npm run build
+
+  compose:
+    name: Validasi Compose
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validasi compose.yaml
+        run: docker compose -f compose.yaml config -q
+
+      - name: Validasi overlay produksi
+        env:
+          PRIMA_DOMAIN: ci.invalid
+          ACME_EMAIL: ci@invalid
+          APP_KEY: base64:Q0lURVNUQ0lURVNUQ0lURVNUQ0lURVNUQ0lURVNUQ0k=
+          APP_URL: https://ci.invalid
+          POSTGRES_PASSWORD: ci
+          PRIMA_SIGNATURE_SECRET: ci
+          TURNSTILE_SITE_KEY: ci
+          TURNSTILE_SECRET_KEY: ci
+          TURNSTILE_ALLOWED_HOSTNAMES: ci.invalid
+          PRIMA_ADMIN_PASSWORD: ci
+        run: docker compose -f compose.yaml -f compose.production.yaml config -q
