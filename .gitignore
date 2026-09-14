@@ -1,0 +1,55 @@
+# Secrets and machine-specific environment
+.env
+.env.*
+!.env.example
+!.env.production.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# Dependencies and generated frontend output
+backend/vendor/
+frontend/node_modules/
+frontend/dist/
+node_modules/
+
+# Runtime data, uploaded documents, backups, and local databases
+backend/storage/postgres/
+backend/storage/app/private/
+backend/storage/logs/
+backend/storage/framework/cache/
+backend/storage/framework/sessions/
+backend/storage/framework/views/
+*.log
+*.pid
+*.key
+*.sql
+*.dump
+*.json.gz
+*.sha256
+
+# Local package caches and editor files
+.composer-cache/
+.composer-home/
+.composer-tmp/
+.idea/
+.vscode/
+.fleet/
+.DS_Store
+Thumbs.db
+.rnd
+
+# Native PHP application retained locally as a migration archive only.
+# Production runs exclusively from frontend/ and backend/.
+/*.php
+/*.html
+/*.css
+/*.js
+/*.bat
+/.htaccess
+/.htaccess.disabled
+/foto/
+

@@ -1,0 +1,133 @@
+name: prima-hsse
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-prima}
+      POSTGRES_USER: ${POSTGRES_USER:-prima}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-prima_local_password}
+      TZ: Asia/Makassar
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-prima} -d ${POSTGRES_DB:-prima}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks: [prima]
+
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    environment:
+      APP_NAME: PRIMA
+      APP_ENV: ${APP_ENV:-local}
+      APP_KEY: ${APP_KEY:-base64:36KlO0umXdg9dkHPR6/x9DByrHGTmfGwNKbFAhhRprM=}
+      APP_DEBUG: ${APP_DEBUG:-true}
+      APP_URL: ${APP_URL:-http://localhost:8080}
+      APP_LOCALE: id
+      APP_FALLBACK_LOCALE: id
+      APP_TIMEZONE: Asia/Makassar
+      FRONTEND_URL: ${APP_URL:-http://localhost:8080}
+      PRIMA_SIGNATURE_SECRET: ${PRIMA_SIGNATURE_SECRET:-local-signature-secret-change-before-production-2026}
+      CAPTCHA_ENABLED: ${CAPTCHA_ENABLED:-true}
+      TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:-1x00000000000000000000AA}
+      TURNSTILE_SECRET_KEY: ${TURNSTILE_SECRET_KEY:-1x0000000000000000000000000000000AA}
+      TURNSTILE_EXPECTED_ACTION: ${TURNSTILE_EXPECTED_ACTION:-login}
+      TURNSTILE_ALLOWED_HOSTNAMES: ${TURNSTILE_ALLOWED_HOSTNAMES:-localhost,127.0.0.1}
+      LOG_CHANNEL: stderr
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${POSTGRES_DB:-prima}
+      DB_USERNAME: ${POSTGRES_USER:-prima}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-prima_local_password}
+      LEGACY_DB_HOST: ${LEGACY_DB_HOST:-host.docker.internal}
+      LEGACY_DB_PORT: ${LEGACY_DB_PORT:-3306}
+      LEGACY_DB_DATABASE: ${LEGACY_DB_DATABASE:-u960614929_tnsali}
+      LEGACY_DB_USERNAME: ${LEGACY_DB_USERNAME:-root}
+      LEGACY_DB_PASSWORD: ${LEGACY_DB_PASSWORD:-}
+      SESSION_DRIVER: database
+      CACHE_STORE: file
+      QUEUE_CONNECTION: database
+      PRIMA_ADMIN_USERNAME: ${PRIMA_ADMIN_USERNAME:-admin}
+      PRIMA_ADMIN_PASSWORD: ${PRIMA_ADMIN_PASSWORD:-Admin123!}
+      PRIMA_ADMIN_EMAIL: ${PRIMA_ADMIN_EMAIL:-admin@prima.local}
+    volumes:
+      - laravel_storage:/var/www/html/storage
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost/up"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [prima]
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: /api/v1
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8080}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks: [prima]
+
+  scheduler:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    command: ["php", "artisan", "schedule:work"]
+    environment:
+      APP_NAME: PRIMA
+      APP_ENV: ${APP_ENV:-local}
+      APP_KEY: ${APP_KEY:-base64:36KlO0umXdg9dkHPR6/x9DByrHGTmfGwNKbFAhhRprM=}
+      APP_URL: ${APP_URL:-http://localhost:8080}
+      APP_TIMEZONE: Asia/Makassar
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: ${POSTGRES_DB:-prima}
+      DB_USERNAME: ${POSTGRES_USER:-prima}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-prima_local_password}
+      CACHE_STORE: database
+      QUEUE_CONNECTION: database
+    volumes:
+      - laravel_storage:/var/www/html/storage
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks: [prima]
+
+  legacy-mysql:
+    image: mariadb:11.4
+    profiles: [migration]
+    environment:
+      MARIADB_ROOT_PASSWORD: legacy_import_only
+      MARIADB_DATABASE: legacy
+    volumes:
+      - ${LEGACY_SQL_DUMP:-./u385118858_checklistEKIM.sql}:/docker-entrypoint-initdb.d/legacy.sql:ro
+      - legacy_mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    networks: [prima]
+
+volumes:
+  postgres_data:
+  laravel_storage:
+  legacy_mysql_data:
+
+networks:
+  prima:
+    driver: bridge

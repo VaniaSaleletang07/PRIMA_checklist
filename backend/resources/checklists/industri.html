@@ -1,0 +1,960 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulir Checklist Inspeksi Perpanjangan Kartu Ijin Masuk</title>
+    <link rel="stylesheet" href="style-industri.css?v=20260724a" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <!-- Logo HSSE 2022 - Kiri -->
+        <div class="logo logo-left">
+          <div class="logo-img">
+            <img
+              src="foto/Logo HSSE 2022.png"
+              alt="HSSE 2022"
+              style="width: 100%; height: 100%; object-fit: contain"
+            />
+          </div>
+          <div>
+            <div style="font-size: 14px; font-weight: bold; color: #333">
+              Health Safety
+            </div>
+            <div style="font-size: 12px; color: #023679; font-weight: bold">
+              Security Environment
+            </div>
+          </div>
+        </div>
+
+        <!-- Logo Pertamina Patra Niaga - Kanan -->
+        <div class="logo logo-right">
+          <div class="logo-img logo-img-large">
+            <img
+              src="foto/PT_Pertamina_Patra_Niaga.png"
+              alt="Pertamina Patra Niaga"
+              style="width: 100%; height: 100%; object-fit: contain"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Title -->
+      <div class="title">
+        <h2>FORMULIR CHECKLIST INSPEKSI PERPANJANGAN KARTU IJIN MASUK</h2>
+        <h2>HASIL PEMERIKSAAN (KEUR) MOBIL TANGKI BBM - INDUSTRI</h2>
+      </div>
+
+      <!-- Hidden field for jenis kendaraan -->
+      <input type="hidden" id="jenisKendaraan" value="INDUSTRI" />
+
+      <!-- Form Information -->
+      <div class="form-info">
+        <div class="form-group">
+          <label class="form-label">Nomor Urut</label>
+          <input type="text" class="form-input" id="nomorUrut" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Merk Mobil/Tahun</label>
+          <input type="text" class="form-input" id="merkMobil" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nama Transportir</label>
+          <input type="text" class="form-input" id="namaTransport" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nomor Polisi</label>
+          <input
+            type="text"
+            class="form-input"
+            id="nomorPolisi"
+            list="nomorPolisiList"
+            autocomplete="off"
+            placeholder="Ketik atau pilih nomor polisi..."
+          />
+          <datalist id="nomorPolisiList">
+            <!-- Options will be populated by JavaScript -->
+          </datalist>
+          <small
+            style="
+              color: #666;
+              font-size: 11px;
+              display: block;
+              margin-top: 4px;
+            "
+            >Pilih dari data sebelumnya atau ketik nomor polisi baru</small
+          >
+        </div>
+        <div class="form-group">
+          <label class="form-label">Produk / Kapasitas</label>
+          <input type="text" class="form-input" id="produkKapasitas" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Pemeriksaan Tanggal</label>
+          <input type="date" class="form-input" id="tanggalPemeriksaan" />
+        </div>
+      </div>
+
+      <!-- Checklist Table -->
+      <div class="table-container">
+        <table id="checklistTable">
+          <thead>
+            <tr>
+              <th style="width: 40px">NO</th>
+              <th style="width: 300px">JENIS PEMERIKSAAN</th>
+              <th style="width: 100px">PELAKSANA</th>
+              <th style="width: 120px">PRIORITAS</th>
+              <th style="width: 50px">BAIK</th>
+              <th style="width: 50px">TIDAK</th>
+              <th>KETERANGAN</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-doc="stnk">
+              <td rowspan="3">1</td>
+              <td>STNK</td>
+              <td>Distribusi</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td>
+                <textarea class="input-keterangan"></textarea>
+                <label class="expire-label">Tgl Masa Berlaku Habis:</label>
+                <input type="date" class="input-expire" />
+              </td>
+            </tr>
+            <tr data-doc="pajak">
+              <td>PAJAK</td>
+              <td>Distribusi</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td>
+                <textarea class="input-keterangan"></textarea>
+                <label class="expire-label">Tgl Masa Berlaku Habis:</label>
+                <input type="date" class="input-expire" />
+              </td>
+            </tr>
+            <tr data-doc="simfit">
+              <td>SIMFIT (Industri)</td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td>
+                <textarea class="input-keterangan"></textarea>
+                <label class="expire-label">Tgl Masa Berlaku Habis:</label>
+                <input type="date" class="input-expire" />
+              </td>
+            </tr>
+            <tr data-doc="tera">
+              <td>2</td>
+              <td>Surat Tera Metrologi</td>
+              <td>Distribusi</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td>
+                <textarea class="input-keterangan"></textarea>
+                <label class="expire-label">Tgl Masa Berlaku Habis:</label>
+                <input type="date" class="input-expire" />
+              </td>
+            </tr>
+            <tr data-doc="keur">
+              <td>3</td>
+              <td>Surat Keur DLLAAJR</td>
+              <td>Distribusi</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td>
+                <textarea class="input-keterangan"></textarea>
+                <label class="expire-label">Tgl Masa Berlaku Habis:</label>
+                <input type="date" class="input-expire" />
+              </td>
+            </tr>
+            <tr>
+              <td rowspan="2">4</td>
+              <td>a. Safety switch</td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td><textarea class="input-keterangan"></textarea></td>
+            </tr>
+            <tr>
+              <td>b. Starter</td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td><textarea class="input-keterangan"></textarea></td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Knalpot</td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td><textarea class="input-keterangan"></textarea></td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td>Kabel listrik</td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td><textarea class="input-keterangan"></textarea></td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td>Baterai (Accu)</td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td><textarea class="input-keterangan"></textarea></td>
+            </tr>
+            <tr>
+              <td>8</td>
+              <td>
+                Lampu-lampu dan Buzzer (jauh/dekat, righting, rem, mundur,
+                rotary lamp, lampu kabut)
+              </td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td><textarea class="input-keterangan"></textarea></td>
+            </tr>
+            <tr>
+              <td rowspan="5">9</td>
+              <td class="sub-item">a. Kelengkapan / Accesories Tangki</td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td><textarea class="input-keterangan"></textarea></td>
+            </tr>
+            <tr>
+              <td class="sub-item">b. Kabin dan Tanki</td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td><textarea class="input-keterangan"></textarea></td>
+            </tr>
+            <tr>
+              <td class="sub-item">c. Tanki dan Bemper belakang</td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td><textarea class="input-keterangan"></textarea></td>
+            </tr>
+            <tr>
+              <td class="sub-item">d. Mesin</td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td><textarea class="input-keterangan"></textarea></td>
+            </tr>
+            <tr>
+              <td class="sub-item">e. Bantalan tanki</td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td><textarea class="input-keterangan"></textarea></td>
+            </tr>
+            <tr>
+              <td rowspan="2">10</td>
+              <td class="sub-item">
+                a. DCP 20 lbs sebanyak jml mengacu pada Volume 1
+              </td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td><textarea class="input-keterangan"></textarea></td>
+            </tr>
+            <tr>
+              <td class="sub-item">b. CO<sub>2</sub> atau 5 lbs di Kabin</td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td><textarea class="input-keterangan"></textarea></td>
+            </tr>
+            <tr>
+              <td>11</td>
+              <td>Rem kaki dan tangan</td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td><textarea class="input-keterangan"></textarea></td>
+            </tr>
+            <tr>
+              <td>12</td>
+              <td>Roda/ban termasuk Ban Serep</td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td><textarea class="input-keterangan"></textarea></td>
+            </tr>
+            <tr>
+              <td>13</td>
+              <td>Alat kemudi</td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td><textarea class="input-keterangan"></textarea></td>
+            </tr>
+            <tr>
+              <td>14</td>
+              <td>Tanda Peringatan ukuran sesuai Panduan Volume 1</td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td><textarea class="input-keterangan"></textarea></td>
+            </tr>
+            <tr>
+              <td>15</td>
+              <td>Tombol emergency cut off<br />(Untuk MT Volume 1)</td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td><textarea class="input-keterangan"></textarea></td>
+            </tr>
+            <tr>
+              <td>16</td>
+              <td>
+                Panel Valve atau Panel Pelindung Bottom Loading Adapter (BLA)
+              </td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td><textarea class="input-keterangan"></textarea></td>
+            </tr>
+            <tr>
+              <td>17</td>
+              <td>Tangki own use</td>
+              <td>HSSE</td>
+              <td class="priority-cell">NON DISPENSASI</td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-baik" />
+              </td>
+              <td class="checkbox-cell">
+                <input type="checkbox" class="chk-tidak" />
+              </td>
+              <td><textarea class="input-keterangan"></textarea></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Catatan Section -->
+      <div
+        class="catatan-section"
+        style="
+          margin-top: 20px;
+          padding: 15px;
+          border: 2px solid #023679;
+          border-radius: 5px;
+          background-color: #fff;
+        "
+      >
+        <label
+          for="catatan"
+          style="
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 16px;
+            color: #023679;
+          "
+          >Catatan:</label
+        >
+        <textarea
+          id="catatan"
+          class="auto-resize-textarea"
+          style="
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            border: 1px solid #999;
+            border-radius: 4px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            resize: none;
+            overflow: hidden;
+            box-sizing: border-box;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+          "
+          placeholder="Masukkan catatan tambahan di sini..."
+        ></textarea>
+      </div>
+
+      <!-- Footer and Signature Section -->
+      <div class="footer-signature-wrapper">
+        <!-- Footer Section -->
+        <div class="footer-section">
+          <table class="footer-table">
+            <tr>
+              <td
+                style="
+                  width: 200px;
+                  border: 1px solid #000;
+                  padding: 5px;
+                  font-weight: bold;
+                "
+              >
+                EKIM Valid Until
+              </td>
+              <td style="border: 1px solid #000; padding: 5px">
+                <input
+                  type="date"
+                  id="ekimValidUntil"
+                  style="
+                    padding: 5px;
+                    border: 1px solid #ccc;
+                    border-radius: 3px;
+                  "
+                />
+              </td>
+            </tr>
+            <tr>
+              <td
+                style="border: 1px solid #000; padding: 5px; font-weight: bold"
+              >
+                Status Perpanjang Akses Gate Barrier
+              </td>
+              <td
+                style="border: 1px solid #000; padding: 5px; text-align: center"
+              >
+                <label
+                  ><input type="radio" name="statusGate" value="OK" /> OK</label
+                >
+                <label style="margin-left: 20px"
+                  ><input type="radio" name="statusGate" value="Not OK" /> Not
+                  OK</label
+                >
+              </td>
+            </tr>
+            <tr>
+              <td
+                style="border: 1px solid #000; padding: 5px; font-weight: bold"
+              >
+                Status Upload Dokumen Online
+              </td>
+              <td
+                style="border: 1px solid #000; padding: 5px; text-align: center"
+              >
+                <label
+                  ><input type="radio" name="statusUpload" value="OK" />
+                  OK</label
+                >
+                <label style="margin-left: 20px"
+                  ><input type="radio" name="statusUpload" value="Not OK" /> Not
+                  OK</label
+                >
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- ═══ TTD DIGITAL — RSA-2048/SHA-256 ═══ -->
+        <style>
+          .ttd-section-wrapper {
+            margin-top: 20px;
+          }
+          .ttd-section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, #1e3a5f, #10334d);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 10px 10px 0 0;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+          }
+          .ttd-crypto-badge {
+            background: rgba(255, 255, 255, 0.18);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+          }
+          .ttd-cards-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            background: #eef2f7;
+            padding: 16px;
+            border-radius: 0 0 10px 10px;
+            border: 1px solid #d1d9e0;
+            border-top: none;
+          }
+          @media (max-width: 680px) {
+            .ttd-cards-row {
+              grid-template-columns: 1fr;
+            }
+          }
+          .ttd-sig-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+          }
+          .ttd-hdr-hsse {
+            background: linear-gradient(135deg, #b91c1c, #dc2626);
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+          }
+          .ttd-hdr-mgr {
+            background: linear-gradient(135deg, #10334d, #1e4976);
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+          }
+          .ttd-role-title {
+            font-size: 12px;
+            font-weight: 800;
+          }
+          .ttd-role-sub {
+            font-size: 10px;
+            opacity: 0.82;
+          }
+          .ttd-body {
+            padding: 14px;
+          }
+          .ttd-lbl {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: #374151;
+            margin: 10px 0 4px;
+          }
+          .ttd-lbl:first-child {
+            margin-top: 0;
+          }
+          .ttd-inp {
+            width: 100%;
+            padding: 7px 10px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 12px;
+            box-sizing: border-box;
+            background: #f9fafb;
+          }
+          .ttd-inp:focus {
+            border-color: #10334d;
+            outline: none;
+            background: #fff;
+          }
+          .ttd-sign-btn {
+            display: block;
+            width: 100%;
+            margin-top: 12px;
+            padding: 9px;
+            background: linear-gradient(135deg, #10334d, #1e5799);
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+          }
+          .ttd-sign-btn:hover {
+            opacity: 0.88;
+          }
+          .ttd-sign-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+          }
+          .ttd-badge {
+            display: none;
+            margin-top: 10px;
+            padding: 10px 12px;
+            background: #ecfdf5;
+            border: 1.5px solid #6ee7b7;
+            border-radius: 8px;
+            font-size: 12px;
+          }
+          .ttd-badge-lbl {
+            background: #059669;
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            display: inline-block;
+            margin-bottom: 6px;
+          }
+          .ttd-hash {
+            font-family: "Courier New", monospace;
+            font-size: 10px;
+            background: #d1fae5;
+            padding: 1px 5px;
+            border-radius: 3px;
+          }
+          .verification-qr {
+            margin: 16px;
+            background: #fff;
+            border: 1px solid #d1d9e0;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+          }
+          .verification-qr h3 {
+            margin: 0 0 10px;
+            font-size: 13px;
+            color: #10334d;
+          }
+          .verification-qr p {
+            margin: 8px 0;
+            color: #64748b;
+            font-size: 12px;
+          }
+          .verification-qr canvas {
+            margin: 8px auto;
+          }
+          .verification-url {
+            font-family: monospace;
+            word-break: break-all;
+            font-size: 10px;
+            color: #64748b;
+          }
+          @media print {
+            .verification-qr {
+              page-break-inside: avoid;
+            }
+            .verification-qr canvas {
+              display: block !important;
+            }
+          }
+          .ttd-qr-box {
+            display: none;
+            margin-top: 14px;
+            padding: 14px;
+            background: #f8faff;
+            border: 1.5px dashed #94a3b8;
+            border-radius: 8px;
+            text-align: center;
+          }
+          .ttd-qr-box h4 {
+            margin: 0 0 8px;
+            font-size: 11px;
+            font-weight: 800;
+            color: #10334d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+          .ttd-qr-box canvas,
+          .ttd-qr-box img {
+            margin: 6px auto;
+            display: block;
+          }
+          .ttd-qr-msg {
+            margin: 8px 0 4px;
+            color: #64748b;
+            font-size: 11px;
+            line-height: 1.5;
+          }
+          .ttd-qr-box .verification-url {
+            font-size: 9px;
+          }
+          @media print {
+            .ttd-qr-box {
+              page-break-inside: avoid;
+            }
+            .ttd-qr-box canvas {
+              display: block !important;
+            }
+          }
+        </style>
+
+        <div class="ttd-section-wrapper" id="ttd-section">
+          <div class="ttd-section-title">
+            <span>TANDA TANGAN DIGITAL</span>
+            <span class="ttd-crypto-badge"></span>
+          </div>
+          <div class="ttd-cards-row">
+            <!-- TTD HSSE -->
+            <div class="ttd-sig-card">
+              <div class="ttd-hdr-hsse">
+                <div>
+                  <div class="ttd-role-title">PEMERIKSA BAGIAN HSSE</div>
+                  <div class="ttd-role-sub">
+                    Health Safety Security Environment
+                  </div>
+                </div>
+              </div>
+              <div class="ttd-body">
+                <label class="ttd-lbl">Nama Pemeriksa HSSE:</label>
+                <input
+                  type="text"
+                  id="namaPemeriksaBagian"
+                  class="ttd-inp"
+                  placeholder="Nama lengkap pemeriksa HSSE"
+                />
+                <label class="ttd-lbl">Tanggal:</label>
+                <input
+                  type="date"
+                  id="tanggalPemeriksaBagian"
+                  class="ttd-inp"
+                />
+                <button
+                  type="button"
+                  class="ttd-sign-btn"
+                  id="btn-sign-hsse"
+                  onclick="signDigital('hsse')"
+                >
+                  Tandatangani Secara Digital (RSA + QR Code)
+                </button>
+                <div class="ttd-badge" id="badge-hsse">
+                  <div class="ttd-badge-lbl">✓ TERVERIFIKASI</div>
+                  <div
+                    style="color: #065f46; line-height: 1.7; font-size: 12px"
+                  >
+                    <strong id="badge-hsse-nama">-</strong><br />
+                    <span id="badge-hsse-waktu" style="font-size: 11px">-</span
+                    ><br />
+                    Hash: <code class="ttd-hash" id="badge-hsse-hash">-</code>
+                  </div>
+                </div>
+                <div class="ttd-qr-box" id="qr-box-hsse">
+                  <h4>QR Code Verifikasi</h4>
+                  <div id="verification-qrcode-hsse"></div>
+                  <p class="ttd-qr-msg" id="verification-qr-message-hsse"></p>
+                  <div
+                    class="verification-url"
+                    id="verification-qr-url-hsse"
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TTD Manajer -->
+            <div class="ttd-sig-card">
+              <div class="ttd-hdr-mgr">
+                <div>
+                  <div class="ttd-role-title">MANAJER / PIMPINAN</div>
+                  <div class="ttd-role-sub">Persetujuan &amp; Pengesahan</div>
+                </div>
+              </div>
+              <div class="ttd-body">
+                <label class="ttd-lbl">Nama Manajer:</label>
+                <input
+                  type="text"
+                  id="namaManajer"
+                  class="ttd-inp"
+                  placeholder="Nama lengkap manajer"
+                />
+                <label class="ttd-lbl">Tanggal:</label>
+                <input type="date" id="tanggalManajer" class="ttd-inp" />
+                <button
+                  type="button"
+                  class="ttd-sign-btn"
+                  id="btn-sign-manajer"
+                  onclick="signDigital('manajer')"
+                >
+                  Tandatangani Secara Digital (RSA + QR Code)
+                </button>
+                <div class="ttd-badge" id="badge-manajer">
+                  <div class="ttd-badge-lbl">✓ TERVERIFIKASI</div>
+                  <div
+                    style="color: #065f46; line-height: 1.7; font-size: 12px"
+                  >
+                    <strong id="badge-manajer-nama">-</strong><br />
+                    <span id="badge-manajer-waktu" style="font-size: 11px"
+                      >-</span
+                    ><br />
+                    Hash:
+                    <code class="ttd-hash" id="badge-manajer-hash">-</code>
+                  </div>
+                </div>
+                <div class="ttd-qr-box" id="qr-box-manajer">
+                  <h4>QR Code Verifikasi</h4>
+                  <div id="verification-qrcode-manajer"></div>
+                  <p
+                    class="ttd-qr-msg"
+                    id="verification-qr-message-manajer"
+                  ></p>
+                  <div
+                    class="verification-url"
+                    id="verification-qr-url-manajer"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.ttd-cards-row -->
+          <div
+            class="verification-qr"
+            id="manager-approval-card"
+            style="display: none"
+          >
+            <h3>PERSETUJUAN MANAGER</h3>
+            <p>
+              Status:
+              <strong id="manager-approval-status">Menunggu Persetujuan</strong>
+            </p>
+            <p>Tanggal: <strong id="manager-approval-date">-</strong></p>
+            <p>Nama Manager: <strong id="manager-approval-name">-</strong></p>
+            <button
+              type="button"
+              class="ttd-sign-btn"
+              id="btn-manager-approve"
+              onclick="approveChecklistFromDetail()"
+            >
+              Approve &amp; Digital Signature
+            </button>
+          </div>
+        </div>
+        <!-- /.ttd-section-wrapper -->
+      </div>
+
+      <!-- Buttons -->
+      <div class="btn-container">
+        <button
+          class="btn btn-print"
+          onclick="window.location.href = 'home.php'"
+          style="background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%)"
+        >
+          Kembali ke Home
+        </button>
+        <button
+          class="btn btn-print"
+          onclick="window.location.href = 'list.php'"
+          style="background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%)"
+        >
+          Lihat Semua Data
+        </button>
+        <button class="btn btn-save" onclick="saveForm()">Simpan Data</button>
+        <button class="btn btn-print" onclick="window.print()">Cetak</button>
+        <button class="btn btn-reset" onclick="resetForm()">Reset</button>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="script.js?v=20260806b"></script>
+  </body>
+</html>

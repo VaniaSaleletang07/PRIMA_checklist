@@ -1,0 +1,29 @@
+services:
+  postgres:
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD wajib diisi}
+
+  backend:
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: ${APP_KEY:?APP_KEY wajib diisi}
+      APP_URL: ${APP_URL:?APP_URL wajib diisi}
+      FRONTEND_URL: ${APP_URL:?APP_URL wajib diisi}
+      PRIMA_SIGNATURE_SECRET: ${PRIMA_SIGNATURE_SECRET:?PRIMA_SIGNATURE_SECRET wajib diisi}
+      CAPTCHA_ENABLED: "true"
+      TURNSTILE_SITE_KEY: ${TURNSTILE_SITE_KEY:?TURNSTILE_SITE_KEY produksi wajib diisi}
+      TURNSTILE_SECRET_KEY: ${TURNSTILE_SECRET_KEY:?TURNSTILE_SECRET_KEY produksi wajib diisi}
+      TURNSTILE_EXPECTED_ACTION: ${TURNSTILE_EXPECTED_ACTION:-login}
+      TURNSTILE_ALLOWED_HOSTNAMES: ${TURNSTILE_ALLOWED_HOSTNAMES:?TURNSTILE_ALLOWED_HOSTNAMES wajib diisi}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD wajib diisi}
+      PRIMA_ADMIN_PASSWORD: ${PRIMA_ADMIN_PASSWORD:?PRIMA_ADMIN_PASSWORD wajib diisi}
+
+  scheduler:
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: ${APP_KEY:?APP_KEY wajib diisi}
+      APP_URL: ${APP_URL:?APP_URL wajib diisi}
+      PRIMA_SIGNATURE_SECRET: ${PRIMA_SIGNATURE_SECRET:?PRIMA_SIGNATURE_SECRET wajib diisi}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD wajib diisi}
